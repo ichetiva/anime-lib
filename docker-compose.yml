@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  backend:
+    build: .
+    command: uvicorn core:app --host 0.0.0.0 --port 8080
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./src:/code/
+    ports:
+      - "8080:8080"
+    networks:
+      anime_lib:
+        aliases:
+          - anime_lib-backend
+
+  postgres:
+    image: postgres
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      anime_lib:
+        aliases:
+          - anime_lib-postgres
+
+networks:
+  anime_lib:
+    external: true
+
+volumes:
+  postgres_data:
