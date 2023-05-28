@@ -23,6 +23,8 @@ class Settings(BaseSettings):
             path="/{}".format(values["POSTGRES_DB"]),
         )
 
+    SECRET_KEY: str
+
 
 @lru_cache
 def get_settings() -> Settings:

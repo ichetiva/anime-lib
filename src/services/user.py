@@ -1,7 +1,12 @@
 import hashlib
 
 from dao import DAOFactory
-from schemas import ReqCreateUser, ReqUpdateUser, ReqChangeUserPassword
+from schemas import (
+    ReqCreateUser,
+    ReqUpdateUser,
+    ReqChangeUserPassword,
+    ReqCreateSession,
+)
 from models import User
 from dto import UserDTO
 from exceptions import user as user_excs
@@ -55,7 +60,7 @@ class UserService:
         user = await self.daos.user_dao.get(for_update=True, username=username)
         if not user:
             raise user_excs.DoesNotExistError()
-        elif user.password != self._hash_password(data.password):
+        elif not self._match_passwords(user.password, data.password):
             raise user_excs.WrongPasswordError()
         elif data.new_password != data.repeat_new_password:
             raise user_excs.PasswordsMismatchError()
@@ -72,6 +77,16 @@ class UserService:
         except:
             return False
         return True
+
+    async def authorize(self, data: ReqCreateSession) -> UserDTO:
+        user = await self.daos.user_dao.get(username=data.username)
+
+        if not user:
+            raise user_excs.DoesNotExistError()
+        elif not self._match_passwords(user.password, data.password):
+            raise user_excs.WrongPasswordError()
+
+        return self.convert(user)
 
     def _hash_password(self, password: str) -> str:
         return hashlib.sha512(password.encode()).hexdigest()
