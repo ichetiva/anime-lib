@@ -16,6 +16,16 @@ class AnimeService:
             poster_link=anime.poster_link,
         )
 
+    def convert_multiple(self, anime_list: list[Anime]) -> list[AnimeDTO]:
+        anime_list_dto = []
+        for anime in anime_list:
+            anime_list_dto.append(self.convert(anime))
+        return anime_list_dto
+
     async def get(self, id: int) -> AnimeDTO:
         anime = await self.daos.anime_dao.get(id=id)
         return self.convert(anime)
+
+    async def get_all(self) -> list[AnimeDTO]:
+        anime_list = await self.daos.anime_dao.get_all()
+        return self.convert_multiple(anime_list)

@@ -22,6 +22,11 @@ class BaseDAO(Generic[Model]):
         instance = await self.session.scalar(stmt)
         return instance
 
+    async def get_all(self) -> list[Model]:
+        stmt = select(self.model)
+        instances = await self.session.scalars(stmt)
+        return instances.all()
+
     async def get_or_create(
         self, *, for_update: bool = False, defaults: dict = {}, **kwargs: dict[str, Any]
     ) -> Tuple[bool, Model]:

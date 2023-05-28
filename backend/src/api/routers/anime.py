@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, List
 
 from fastapi import APIRouter, Path, Depends
 
@@ -15,7 +15,13 @@ router = APIRouter(
 @router.get("/{id}", response_model=AnimeDTO)
 async def get_single_anime(
     id: Annotated[int, Path(title="The ID of the anime to get")],
-    services: ServicesFactory = Depends(get_services()),
+    services: ServicesFactory = Depends(get_services),
 ):
     anime = await services.anime_service.get(id)
     return anime
+
+
+@router.get("/", response_model=List[AnimeDTO])
+async def get_all_anime(services: ServicesFactory = Depends(get_services)):
+    anime_list = await services.anime_service.get_all()
+    return anime_list
