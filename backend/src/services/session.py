@@ -1,3 +1,4 @@
+from typing import TYPE_CHECKING
 from datetime import datetime
 
 import jwt
@@ -6,11 +7,13 @@ from dao import DAOFactory
 from models import Session
 from dto import UserDTO, SessionDTO
 from core import settings
-from services import ServicesFactory
+
+if TYPE_CHECKING:
+    from services import ServicesFactory
 
 
 class SessionService:
-    def __init__(self, daos: DAOFactory, services: ServicesFactory) -> None:
+    def __init__(self, daos: DAOFactory, services: "ServicesFactory") -> None:
         self.daos = daos
         self.services = services
 
