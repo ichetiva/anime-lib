@@ -13,4 +13,4 @@ class ServicesFactory:
 
     @property
     def session_service(self) -> SessionService:
-        return SessionService(self.daos)
+        return SessionService(self.daos, self)

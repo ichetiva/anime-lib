@@ -5,7 +5,8 @@ from fastapi import APIRouter, Depends, Path
 from schemas import ReqCreateUser, ReqUpdateUser, ReqChangeUserPassword
 from dto import UserDTO
 from services import ServicesFactory
-from core import get_services
+from core import get_services, get_current_user
+from exceptions import session as session_excs
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -33,7 +34,11 @@ async def update_user(
     username: Annotated[str, Path(title="The username of the user to get")],
     data: ReqUpdateUser,
     services: ServicesFactory = Depends(get_services),
+    current_user: UserDTO = Depends(get_current_user),
 ):
+    if current_user.username != username:
+        raise session_excs.NoPermissionsError()
+
     user = await services.user_service.update(username, data)
     return user
 
@@ -43,7 +48,11 @@ async def change_user_password(
     username: Annotated[str, Path(title="The username of the user to get")],
     data: ReqChangeUserPassword,
     services: ServicesFactory = Depends(get_services),
+    current_user: UserDTO = Depends(get_current_user),
 ):
+    if current_user.username != username:
+        raise session_excs.NoPermissionsError()
+
     user = await services.user_service.change_password(username, data)
     return user
 
@@ -52,6 +61,10 @@ async def change_user_password(
 async def delete_user(
     username: Annotated[str, Path(title="The username of the user to get")],
     services: ServicesFactory = Depends(get_services),
+    current_user: UserDTO = Depends(get_current_user),
 ):
+    if current_user.username != username:
+        raise session_excs.NoPermissionsError()
+
     ok = await services.user_service.delete(username)
     return {"ok": ok}
