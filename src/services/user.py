@@ -18,8 +18,8 @@ class UserService:
 
     def convert(self, user: User) -> UserDTO:
         return UserDTO(
+            id=user.id,
             username=user.username,
-            password=user.password,
             is_admin=user.is_admin,
             last_login_at=user.last_login_at,
             created_at=user.created_at,

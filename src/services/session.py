@@ -14,18 +14,17 @@ class SessionService:
 
     def convert(self, session: Session) -> SessionDTO:
         return SessionDTO(
-            id=session.id,
-            user_id=session.user_id,
             access_token=session.access_token,
-            created_at=session.created_at,
-            updated_at=session.updated_at,
         )
 
     async def create(self, user: UserDTO) -> SessionDTO:
-        _, session = await self.daos.session_dao.get_or_create(
+        created, session = await self.daos.session_dao.get_or_create(
             defaults={"access_token": self._generate_access_token(user.id)},
             user_id=user.id,
         )
+        if created:
+            await self.daos.session.commit()
+
         return self.convert(session)
 
     def _generate_access_token(self, user_id: int) -> str:

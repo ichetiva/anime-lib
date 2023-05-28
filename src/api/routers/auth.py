@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 
-from dto import UserDTO
+from dto import SessionDTO
 from schemas import ReqCreateSession
 from services import ServicesFactory
 from core import get_services
@@ -11,7 +11,7 @@ router = APIRouter(
 )
 
 
-@router.post("/", response_model=UserDTO)
+@router.post("/", response_model=SessionDTO)
 async def create_session(
     data: ReqCreateSession,
     services: ServicesFactory = Depends(get_services),
