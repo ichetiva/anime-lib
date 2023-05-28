@@ -18,3 +18,4 @@ async def get_single_anime(
     services: ServicesFactory = Depends(get_services()),
 ):
     anime = await services.anime_service.get(id)
+    return anime

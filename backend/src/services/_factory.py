@@ -1,6 +1,7 @@
 from dao import DAOFactory
 from .user import UserService
 from .session import SessionService
+from .anime import AnimeService
 
 
 class ServicesFactory:
@@ -14,3 +15,7 @@ class ServicesFactory:
     @property
     def session_service(self) -> SessionService:
         return SessionService(self.daos, self)
+
+    @property
+    def anime_service(self) -> AnimeService:
+        return AnimeService(self.daos)
