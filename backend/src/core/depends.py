@@ -7,6 +7,7 @@ from .db import async_session
 from dao import DAOFactory
 from dto import UserDTO
 from services import ServicesFactory
+from exceptions import session as session_excs
 
 
 async def get_session() -> AsyncGenerator[AsyncSession, None]:
@@ -31,4 +32,4 @@ async def get_current_user(
         token = authorization.replace("Bearer ", "")
         user = await services.session_service.get_user(token)
         return user
-    return None
+    raise session_excs.UnauthorizedError()

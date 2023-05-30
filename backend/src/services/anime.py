@@ -27,5 +27,5 @@ class AnimeService:
         return self.convert(anime)
 
     async def get_all(self) -> list[AnimeDTO]:
-        anime_list = await self.daos.anime_dao.get_all()
+        anime_list = await self.daos.anime_dao.get_multiple()
         return self.convert_multiple(anime_list)

@@ -22,8 +22,8 @@ class BaseDAO(Generic[Model]):
         instance = await self.session.scalar(stmt)
         return instance
 
-    async def get_all(self) -> list[Model]:
-        stmt = select(self.model)
+    async def get_multiple(self, **kwargs: dict[str, Any]) -> list[Model]:
+        stmt = select(self.model).filter_by(**kwargs)
         instances = await self.session.scalars(stmt)
         return instances.all()
 
