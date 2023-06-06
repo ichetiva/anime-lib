@@ -28,6 +28,7 @@ class SessionService:
             user_id=user.id,
         )
         if created:
+            await self.daos.session.refresh(session)
             await self.daos.session.commit()
 
         return self.convert(session)

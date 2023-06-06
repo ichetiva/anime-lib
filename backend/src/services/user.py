@@ -34,6 +34,7 @@ class UserService:
         if not created:
             raise user_excs.AlreadyExistsError()
 
+        await self.daos.session.refresh(user)
         await self.daos.session.commit()
 
         return self.convert(user)
