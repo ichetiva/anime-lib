@@ -29,3 +29,10 @@ class AnimeService:
     async def get_all(self) -> list[AnimeDTO]:
         anime_list = await self.daos.anime_dao.get_multiple()
         return self.convert_multiple(anime_list)
+
+    async def search(self, pattern: str, search_in: str) -> list[AnimeDTO]:
+        if search_in == "title":
+            anime_list = await self.daos.anime_dao.get_by_pattern_in_title(pattern)
+        else:
+            anime_list = await self.daos.anime_dao.get_multiple()
+        return self.convert_multiple(anime_list)
