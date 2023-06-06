@@ -1,7 +1,8 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Depends
 
-from dto import SessionDTO
-from schemas import ReqCreateSession
+from schemas import ReqCreateSession, ResSession
 from services import ServicesFactory
 from core import get_services
 
@@ -11,11 +12,14 @@ router = APIRouter(
 )
 
 
-@router.post("/", response_model=SessionDTO)
+@router.post("/", response_model=ResSession)
 async def create_session(
     data: ReqCreateSession,
-    services: ServicesFactory = Depends(get_services),
+    services: Annotated[ServicesFactory, Depends(get_services)],
 ):
     user = await services.user_service.authorize(data)
     session = await services.session_service.create(user)
-    return session
+    return {
+        "status": "success",
+        "data": session,
+    }
