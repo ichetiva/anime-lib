@@ -85,6 +85,6 @@ async def delete_user(
 
     ok = await services.user_service.delete(username)
     return {
-        "status": "success",
+        "status": "success" if ok else "unsuccessful",
         "data": None,
     }
